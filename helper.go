@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/user"
@@ -34,12 +33,12 @@ func checkErrAndContinue(err error) {
 }
 
 func copyFile(sourceFile, destinationFile string) error {
-	input, err := ioutil.ReadFile(filepath.FromSlash(sourceFile))
+	input, err := os.ReadFile(filepath.FromSlash(sourceFile))
 	if err != nil {
 		return err
 	}
 
-	err = ioutil.WriteFile(filepath.FromSlash(destinationFile), input, os.ModePerm)
+	err = os.WriteFile(filepath.FromSlash(destinationFile), input, os.ModePerm)
 	if err != nil {
 		return err
 	}
