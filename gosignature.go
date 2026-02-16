@@ -232,7 +232,6 @@ func mapFields(ldapEntry, fieldMapping map[string]string) map[string]string {
 				// static mapping
 				m[k] = v
 			}
-			debug("k:" + k + " v:" + m[k])
 		}
 	}
 
