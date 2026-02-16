@@ -11,7 +11,8 @@ go get gosignature
 Test (don't use "go run"):
 
 ```console
-go build -o gosignature.exe; .\gosignature.exe -testmode
+go build -o gosignature.exe
+gosignature.exe -testmode
 ```
 
 Build:
@@ -179,11 +180,13 @@ Empty the destination directory before generating signatures (**0**/1). Use "-fo
 
 * Supports Outlook 2010 and 2016 (and probably 2019 and 365 as well)
 
-* Plain text and HTML templates should be UTF-8 encoded!
+* Plain text and HTML templates should use the same encoding as Outlook does - on a German Outlook that is **Windows-1252**
 
 * Settings for "-ini" are relative to the program's base directory.
 
 * The field mapping is more flexible and no longer limited to the ones listed in the example configuration file, you can basically use any combination of placeholder and LDAP attribute.
+
+* LDAP attributes are prefixed using an asterisk **(*)**. Static values can be entered as well.
 
 * Features a new and more powerful template parser based on [go's template package](https://golang.org/pkg/text/template/) ("-newparser", fixed delimiter: "[[ ... ]]", have a look at the examples!).
 
