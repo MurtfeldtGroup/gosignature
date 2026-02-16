@@ -226,7 +226,13 @@ func mapFields(ldapEntry, fieldMapping map[string]string) map[string]string {
 	m := make(map[string]string)
 	for k, v := range fieldMapping {
 		if len(v) > 0 {
-			m[k] = ldapEntry[v[1:]]
+			if strings.HasPrefix(v, "*") {
+				m[k] = ldapEntry[v[1:]]
+			} else {
+				// static mapping
+				m[k] = v
+			}
+			debug("k:" + k + " v:" + m[k])
 		}
 	}
 
