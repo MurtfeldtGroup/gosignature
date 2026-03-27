@@ -41,7 +41,11 @@ func setSignature(signature, style, profile string, setforall int) error {
 				return err
 			}
 			for _, sk := range subkeys {
-				setSignatureValue(outlookVersion, sk, name, signature)
+				if signature == "" {
+					deleteSignatureValue(sk, name)
+				} else {
+					setSignatureValue(outlookVersion, sk, name, signature)
+				}
 			}
 		}
 	}
@@ -94,7 +98,19 @@ func getAccountSubkeys(outlookVersion int, profile string) ([]string, error) {
 
 }
 
-func setSignatureValue(outlookVersion int, key, name, value string) error {
+func deleteSignatureValue(key string, name string) error {
+	k, err := registry.OpenKey(registry.CURRENT_USER, key, registry.SET_VALUE)
+	if err != nil {
+		return err
+	}
+	defer k.Close()
+
+	err = k.DeleteValue(name)
+	return nil
+
+}
+
+func setSignatureValue(outlookVersion int, key string, name string, value string) error {
 	k, err := registry.OpenKey(registry.CURRENT_USER, key, registry.SET_VALUE)
 	if err != nil {
 		return err
