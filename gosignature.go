@@ -179,11 +179,20 @@ func main() {
 					//}
 					err = writeSignature(destFolder, sd.signatureName, ex, signature)
 					checkErrAndExit(err)
+					if ex == "htm" && cfg.Section("Main").Key("WindowsConnectedFilesSuffix").MustString("") != "" {
+						copyFolder(filepath.Join(templateFolder, sd.templateName+cfg.Section("Main").Key("WindowsConnectedFilesSuffix").MustString("")),
+							filepath.Join(destFolder, sd.templateName+cfg.Section("Main").Key("WindowsConnectedFilesSuffix").MustString("")))
+					}
 					generated = append(generated, sd.signatureName)
 				}
 			}
 			if sd.nodefault == 0 {
 				setSignature(sd.signatureName,
+					sd.style,
+					winExpandEnv(cfg.Section("Main").Key("EMailAccount").MustString("")),
+					cfg.Section("Main").Key("SetForAllEMailAccounts").MustInt(0))
+			} else {
+				setSignature("",
 					sd.style,
 					winExpandEnv(cfg.Section("Main").Key("EMailAccount").MustString("")),
 					cfg.Section("Main").Key("SetForAllEMailAccounts").MustInt(0))
@@ -214,6 +223,12 @@ func prepareFolder(destFolder string) error {
 	return err
 }
 
+func removeFolder(destFolder string) error {
+	err := os.RemoveAll(destFolder)
+
+	return err
+}
+
 func writeSignature(destFolder, templateName, extension, content string) error {
 	fileName := templateName + "." + extension
 
@@ -236,6 +251,20 @@ func mapFields(ldapEntry, fieldMapping map[string]string) map[string]string {
 	}
 
 	return m
+}
+
+func copyFolder(srcFolder string, destFolder string) error {
+	removeFolder(destFolder)
+	prepareFolder(destFolder)
+	files, err := os.ReadDir(srcFolder)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		copyFile(filepath.Join(srcFolder, file.Name()), filepath.Join(destFolder, file.Name()))
+	}
+	return nil
 }
 
 func copyImages(templateFolder, srcName, dstName, userName, destFolder string) {
