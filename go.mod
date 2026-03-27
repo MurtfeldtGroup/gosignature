@@ -1,11 +1,11 @@
 module gosignature
 
-go 1.24.0
+go 1.25.0
 
 require (
-	github.com/go-ldap/ldap/v3 v3.4.12
-	golang.org/x/sys v0.41.0
-	golang.org/x/text v0.34.0
+	github.com/go-ldap/ldap/v3 v3.4.13
+	golang.org/x/sys v0.42.0
+	golang.org/x/text v0.35.0
 	gopkg.in/ini.v1 v1.67.1
 )
 
@@ -21,6 +21,6 @@ require (
 	github.com/jcmturner/goidentity/v6 v6.0.1 // indirect
 	github.com/jcmturner/gokrb5/v8 v8.4.4 // indirect
 	github.com/jcmturner/rpc/v2 v2.0.3 // indirect
-	golang.org/x/crypto v0.48.0 // indirect
-	golang.org/x/net v0.50.0 // indirect
+	golang.org/x/crypto v0.49.0 // indirect
+	golang.org/x/net v0.52.0 // indirect
 )
