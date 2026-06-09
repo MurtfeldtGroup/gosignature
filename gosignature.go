@@ -62,20 +62,6 @@ func main() {
 	sd.nodefault = cfg.Section("Main").Key("NoReplyMessageSignature").MustInt(0)
 	signatureDefintions = append(signatureDefintions, sd)
 
-	sd = new(signatureDefinition)
-	sd.templateName = cfg.Section("Main").Key("FixedSignTypeNoMobile").String()
-	sd.style = "new"
-	sd.nodefault = 1
-	sd.signatureName = sd.templateName
-	signatureDefintions = append(signatureDefintions, sd)
-
-	sd = new(signatureDefinition)
-	sd.templateName = cfg.Section("Main").Key("FixedSignTypeReplyNoMobile").String()
-	sd.style = "reply"
-	sd.nodefault = 1
-	sd.signatureName = sd.templateName
-	signatureDefintions = append(signatureDefintions, sd)
-
 	ldapEntry := make(map[string]string)
 	if !(*testmode) && cfg.Section("Main").Key("LDAPBaseObjectDN").String() != "" {
 
@@ -141,6 +127,23 @@ func main() {
 		signatureDefintions[1].templateName = fieldMap["SignTypeReply"]
 	}
 
+	signatureDefintions[0].signatureName = cfg.Section("Main").Key("TargetSignType").MustString(signatureDefintions[0].templateName)
+	signatureDefintions[1].signatureName = cfg.Section("Main").Key("TargetSignTypeReply").MustString(signatureDefintions[1].templateName)
+
+	// handle "NoMobile" signatures
+	if fieldMap["Mobile"] == "" {
+		signatureDefintions[0].templateName = cfg.Section("Main").Key("PrefixNoMobile").MustString("") + signatureDefintions[0].templateName
+		signatureDefintions[1].templateName = cfg.Section("Main").Key("PrefixNoMobile").MustString("") + signatureDefintions[1].templateName
+		signatureDefintions[0].templateName = cfg.Section("Main").Key("FixedSignTypeNoMobile").MustString(signatureDefintions[0].templateName)
+		signatureDefintions[1].templateName = cfg.Section("Main").Key("FixedSignTypeReplyNoMobile").MustString(signatureDefintions[1].templateName)
+		if fieldMap["SignTypeNoMobile"] != "" {
+			signatureDefintions[0].templateName = cfg.Section("Main").Key("PrefixNoMobile").MustString("") + fieldMap["SignTypeNoMobile"]
+		}
+		if fieldMap["SignTypeReplyNoMobile"] != "" {
+			signatureDefintions[1].templateName = cfg.Section("Main").Key("PrefixNoMobile").MustString("") + fieldMap["SignTypeReplyNoMobile"]
+		}
+	}
+
 	extensions := [3]string{"txt", "htm", "rtf"}
 	generated := []string{}
 	templateFolder := filepath.Join(programPath, cfg.Section("Main").Key("TemplateFolder").MustString("Vorlagen"))
@@ -155,8 +158,6 @@ func main() {
 	if cfg.Section("Main").Key("EmptySignatureFolder").MustInt(0) == 1 && (*force || askForConfirmation("Do you really want to empty the destination directory ("+destFolder+")?")) {
 		removeContents(destFolder)
 	}
-	signatureDefintions[0].signatureName = cfg.Section("Main").Key("TargetSignType").MustString(signatureDefintions[0].templateName)
-	signatureDefintions[1].signatureName = cfg.Section("Main").Key("TargetSignTypeReply").MustString(signatureDefintions[1].templateName)
 	for _, sd := range signatureDefintions {
 		if sd.templateName != "" {
 			if !contains(generated, sd.signatureName) {
