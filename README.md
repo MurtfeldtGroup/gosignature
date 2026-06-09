@@ -33,7 +33,9 @@ Use [UPX](https://upx.github.io) to reduce binary size even more:
 upx gosignature.exe
 ```
 
-## Status
+## Config
+
+### [Main]
 
 ```ini
 DatabaseConnection=
@@ -134,13 +136,13 @@ Name of the the reply message template. Use "FixedSignTypeReplyForDN1 ... n" to 
 FixedSignTypeNoMobile=
 ```
 
-Name of an optional alternative new message template (originally intended to generate a signature without mobile phone number).
+Name of an optional alternative new message template (intended to generate a signature without mobile phone number).
 
 ```ini
 FixedSignTypeReplyNoMobile=
 ```
 
-Name of an optional alternative reply message template (originally intended to generate a signature without mobile phone number).
+Name of an optional alternative reply message template (intended to generate a signature without mobile phone number).
 
 ```ini
 TargetSignType=
@@ -172,6 +174,17 @@ EmptySignatureFolder=
 
 Empty the destination directory before generating signatures (**0**/1). Use "-force" to suppress the confirmation message!
 
+```ini
+WindowsConnectedFilesSuffix=
+```
+
+The locale specific folder-suffix for Windows' connected HTML files. In German it is *-Dateien*, in English it is *-Files*. This is required to copy the contents of those folders to the target.
+
+### [FieldMapping]
+
+Fields that can be used with **@FIELDNAME@** in any template.
+Any field prefixed by an asterisk **(*)** will be looked up via LDAP. All other fields are static strings.
+
 ## Notes
 
 * Supports GIF, PNG and JPEG.
@@ -182,11 +195,11 @@ Empty the destination directory before generating signatures (**0**/1). Use "-fo
 
 * Plain text and HTML templates should use the same encoding as Outlook does - on a German Outlook that is **Windows-1252**
 
+* RTF files must not contain hex encoded *datafield* entries of the strings to be replaced (typically in HYPERLINKs). Those should be removed beforehand!
+
 * Settings for "-ini" are relative to the program's base directory.
 
 * The field mapping is more flexible and no longer limited to the ones listed in the example configuration file, you can basically use any combination of placeholder and LDAP attribute.
-
-* LDAP attributes are prefixed using an asterisk **(*)**. Static values can be entered as well.
 
 * Features a new and more powerful template parser based on [go's template package](https://golang.org/pkg/text/template/) ("-newparser", fixed delimiter: "[[ ... ]]", have a look at the examples!).
 
