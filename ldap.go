@@ -1,10 +1,10 @@
 package main
 
 import (
+	"strings"
 	"time"
 
 	"github.com/go-ldap/ldap/v3"
-
 	"github.com/go-ldap/ldap/v3/gssapi"
 )
 
@@ -43,7 +43,7 @@ func ldapConnect(lcp *ldapConnectionProfile) (*ldap.Conn, error) {
 func ldapSearch(conn *ldap.Conn, lsc *ldapSearchCriteria, userName string) (*ldap.SearchResult, error) {
 	attributes := []string{}
 	for _, v := range lsc.fieldmap {
-		if v != "" {
+		if strings.HasPrefix(v, "*") {
 			attributes = append(attributes, v[1:])
 		}
 	}
