@@ -145,6 +145,12 @@ FixedSignTypeReplyNoMobile=
 Name of an optional alternative reply message template (intended to generate a signature without mobile phone number).
 
 ```ini
+PrefixNoMobile=
+```
+
+If provided, template names will be preffixed using this value for signatures without mobile phone number.
+
+```ini
 TargetSignType=
 ```
 
