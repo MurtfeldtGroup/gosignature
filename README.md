@@ -154,7 +154,7 @@ If provided, template names will be preffixed using this value for signatures wi
 TargetSignType=
 ```
 
-Target name of the new message signature (otherwise the name of the template is used).
+Target name of the new message signature (otherwise the name of the template is used). Any references to auxilliary files in the template must match the *Target* + *WindowsConnectedFilesSuffix* directory structure!
 
 ```ini
 TargetSignTypeReply=

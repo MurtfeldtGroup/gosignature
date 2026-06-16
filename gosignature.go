@@ -127,9 +127,6 @@ func main() {
 		signatureDefintions[1].templateName = fieldMap["SignTypeReply"]
 	}
 
-	signatureDefintions[0].signatureName = cfg.Section("Main").Key("TargetSignType").MustString(signatureDefintions[0].templateName)
-	signatureDefintions[1].signatureName = cfg.Section("Main").Key("TargetSignTypeReply").MustString(signatureDefintions[1].templateName)
-
 	// handle "NoMobile" signatures
 	if fieldMap["Mobile"] == "" {
 		signatureDefintions[0].templateName = cfg.Section("Main").Key("PrefixNoMobile").MustString("") + signatureDefintions[0].templateName
@@ -143,6 +140,9 @@ func main() {
 			signatureDefintions[1].templateName = cfg.Section("Main").Key("PrefixNoMobile").MustString("") + fieldMap["SignTypeReplyNoMobile"]
 		}
 	}
+
+	signatureDefintions[0].signatureName = cfg.Section("Main").Key("TargetSignType").MustString(signatureDefintions[0].templateName)
+	signatureDefintions[1].signatureName = cfg.Section("Main").Key("TargetSignTypeReply").MustString(signatureDefintions[1].templateName)
 
 	extensions := [3]string{"txt", "htm", "rtf"}
 	generated := []string{}
@@ -182,7 +182,7 @@ func main() {
 					checkErrAndExit(err)
 					if ex == "htm" && cfg.Section("Main").Key("WindowsConnectedFilesSuffix").MustString("") != "" {
 						copyFolder(filepath.Join(templateFolder, sd.templateName+cfg.Section("Main").Key("WindowsConnectedFilesSuffix").MustString("")),
-							filepath.Join(destFolder, sd.templateName+cfg.Section("Main").Key("WindowsConnectedFilesSuffix").MustString("")))
+							filepath.Join(destFolder, sd.signatureName+cfg.Section("Main").Key("WindowsConnectedFilesSuffix").MustString("")))
 					}
 					generated = append(generated, sd.signatureName)
 				}
